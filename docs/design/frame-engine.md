@@ -1100,7 +1100,7 @@ The printed look comes from exact repetition, continuous curvature, filled width
 4. `router.afterEach` → `frame.route = name`. Navigations are wrapped in `document.startViewTransition` with the frame excluded. After the DOM update, call `frame.signal('routeChange')`.
 5. Turn existing `Frame.vue` usages (columns, panels, nav strip) into nested elevations inside slots; they inherit `--m` and the skin.
 6. When the mid-century and Victorian frames reproduce today's look, delete `src/frames/frameEngine.ts`, `frameSettings.ts` and `Frame.vue`.
-7. **Leaving Vue for the rest of the site is a separate decision (section 15).** The framing layer has already left Vue at step 1. Supabase, auth, TipTap and the admin views are just slot content and keep working.
+7. **The rest of the site then leaves Vue too** (decided; see section 12.5). The framing layer has already left Vue at step 1. Supabase, auth, TipTap and the admin views are slot content that is ported page by page.
 
 ### 12.3 Accessibility
 
@@ -1122,11 +1122,38 @@ The printed look comes from exact repetition, continuous curvature, filled width
 - A sticky member (`attach: "viewport"`) renders in its slot's own small SVG inside a `position: sticky` slot.
 - Test the real routes at M1, including the TipTap editor, long words, embedded media and overflow, not lorem.
 
+### 12.5 Leaving Vue entirely (decided)
+
+The current app is small: 43 Vue files, about 5,400 lines, plus about 1,400 lines of TS/JS. About a quarter of it is the admin forms and the marginalia wizard. Nothing in it needs Vue specifically.
+
+| Vue job today | TypeScript replacement |
+|---|---|
+| `vue-router` | A small History-API router (about 150 lines): route table, `popstate`, link interception. It calls `frame.route = name` and wraps navigations in View Transitions. |
+| Reactivity (`ref`, `computed`) | Signals (`@preact/signals-core`, MIT, about 2 KB). The engine's Lab uses the same model. |
+| Templates and components | Plain DOM builders, or `lit-html` (BSD-3, about 3 KB) for repeated markup; custom elements for reusable widgets. Pages render into the frame's `data-slot` openings. |
+| TipTap via `@tiptap/vue-3` | `@tiptap/core`, which is framework-agnostic (`new Editor({ element, extensions })`). The extensions you use stay the same. |
+| Supabase composable | Unchanged logic as a plain module exposing signals (`user`, `profile`). |
+| Vite plugin for Vue | Removed. Vite stays as the dev server and bundler. |
+
+**Order.** Build the TypeScript shell (router, signals, `<frame-elevation>` as the page root) at M1 instead of mounting the frame inside `SiteChrome.vue`. Then port pages from simplest to hardest:
+
+1. About and Newsletter
+2. Project index and detail
+3. Marginalia index and entry
+4. Login and account
+5. Admin lists and forms
+6. The marginalia wizard and editor
+
+Vue and the new shell can coexist during the move: unported routes temporarily mount their old Vue component inside a slot. Vue is deleted when the last route is ported. **Estimate:** 3–5 weeks part-time alongside M1–M4 *(assumption)*.
+
+### 12.6 Keeping the map engine possible
+See section 16.
+
 ---
 
 ## 13. Roadmap
 
-Estimates are rough, part-time, solo with AI help. **Scope freeze:** M0–M3 are rectilinear only, with no curve kernel until the frame is running on the live site. Maps and any content engine are **out of scope**. A separate mapping engine can come later and could reuse `frame/core/room` and `curves`.
+Estimates are rough, part-time, solo with AI help. **Scope freeze:** M0–M3 are rectilinear only, with no curve kernel until the frame is running on the live site. Maps are **not built** in this roadmap, but the core is kept shareable so a future map engine can plug in (section 16).
 
 | # | Milestone | Visible deliverable | Done when |
 |---|---|---|---|
@@ -1179,7 +1206,7 @@ Each has a recommended default, so work can start before you decide.
 |---|---|---|
 | 1 | 2-ribbon twist or 3-strand plait? | **Twist** as the base, plait as the wide-rail variant (`strands` steps to 3 at z ≥ 0.5). Compare both in the Lab at M3b. |
 | 2 | Garland only down the sides, or also along the bottom? | **Sides only**, with a tailpiece and double rule along the bottom. A bottom garland is one extra assembly; try it at M3b. On compact, consider bottom-only. |
-| 3 | Should the rest of the site leave Vue? | **Not now.** The frame leaves Vue at M1. Keep Vue for routing, Supabase, TipTap and admin; revisit after M8 (options: keep Vue; static pages with islands, e.g. Astro; plain TS). |
+| 3 | Should the rest of the site leave Vue? | **Decided (owner, 2026-10-10): yes, the whole site moves to TypeScript.** See section 12.5 for the plan. |
 | 4 | Which style ships first? | **Mid-century** (M3), with the drawn-motif Victorian (M3b) in parallel. |
 | 5 | Flame spiral growth? | **φ per 90°** (the classic golden spiral you asked for), with **φ per 54°** one click away, because it keeps the drawn character (RMS 0.21). Judge side by side. |
 | 6 | Flame leaf sizes: self-similar (golden) or linear (as drawn)? | **Self-similar**, with the drawn version kept for comparison; decide by eye at M6. |
@@ -1190,4 +1217,27 @@ Each has a recommended default, so work can start before you decide.
 | 11 | First motion? | **Conveyor and courier-to-active-nav** on route change (M8). No ambient loops; "still engraving" toggle on. |
 | 12 | Lab interface built in Vue or plain TS? | **Plain TypeScript**, matching your move away from Vue. Panels are generated from the node-type registry anyway, so a framework adds little. Vue would also work, since the Lab is dev-only. The canvas is the engine's own renderer either way. |
 | 13 | Should the Lab ever be published as a tool for others? | **No, keep it private** for now (avoids the patent and GSAP-style licence questions entirely). |
-| 14 | Mapping engine? | **Out of scope.** Revisit after M9 once you know its constraints. |
+| 14 | Mapping engine? | **Not built now, but designed for (owner, 2026-10-10).** The frame engine's core is kept shareable so a future map engine can plug into it (section 16). |
+---
+
+## 16. Map engine readiness
+
+A mapping engine is not built now, but it is a large part of the owner's work, so the frame engine keeps the door open. Most of what a cartographic renderer needs already exists in this design. The rule: **shared foundations live in `frame/core` with no frame-specific assumptions**, and a future `map/` package consumes them.
+
+| Shared foundation | Frame use | Map use |
+|---|---|---|
+| `curves` (arc length, offsets, line families, filled outlines) | ribbons, hatch, mouldings | coastline waterlining, contour hatching, cased roads, river tapers |
+| `geometry` (polygon offset and booleans, hulls); planned as Clipper2-style operations | knockouts, hulls, text wrap | buffers, waterline rings, clipping to the neatline |
+| `room` (z = log scale, step/interpolate values, hysteresis, generalisation operators, priority) | thresholds | zoom levels: the same semantics as map zoom styling |
+| Expression language (`step`, `lerp`, `byClass`) | frame values | data-driven styles; keep its semantics close to MapLibre style expressions (BSD-3) so map styles can borrow them |
+| `skin` (palette roles, ramps, lighting, finishes) | frame styles | choropleth ramps, hillshade-like relief tints, one look across frame and map |
+| Station / label placement with collisions by priority | cartouches, punctuation | map labels (later) |
+| `render-svg` behind a Scene interface | frames | small and medium maps; a Canvas or WebGL renderer can implement the same Scene interface for large datasets |
+
+**Boundaries to respect from M0:**
+
+- `core` never assumes a rectangle page or CSS pixels. Coordinates go through a transform, so a map projection (e.g. `d3-geo`, ISC) can supply them.
+- The Scene format is renderer-neutral: layered items with roles and stable ids.
+- `geometry` and `curves` take plain arrays, not frame types.
+
+**How maps will meet frames:** a map is the content of an opening, and its neatline is a frame member. The frame's nested-elevation, inset (legend, compass panels), cartouche (title) and skin machinery apply unchanged.
