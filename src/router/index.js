@@ -48,6 +48,10 @@ const router = createRouter({
     },
     { path: '/admin/marginalia/new', name: 'admin-marginalia-new', component: AdminMarginaliaForm, meta: { requiresAuth: true } },
     { path: '/admin/marginalia/:id', name: 'admin-marginalia-edit', component: AdminMarginaliaForm, meta: { requiresAuth: true } },
+    // dev-only tools (left out of production builds)
+    ...(import.meta.env.DEV
+      ? [{ path: '/dev/ornaments', name: 'dev-ornaments', component: () => import('../views/dev/OrnamentSpecimens.vue') }]
+      : []),
     // legacy markdown articles
     { path: '/:category/:slug/', name: 'article', component: ArticleView },
   ],

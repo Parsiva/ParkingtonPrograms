@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "ornaments": "node scripts/cut-ornaments.mjs",
     "lint": "eslint . --fix"
   },
   "dependencies": {

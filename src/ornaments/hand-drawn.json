@@ -1,0 +1,68 @@
+{
+  "corner-medallion": {
+    "kind": "fixed",
+    "width": 355.82,
+    "height": 301.31,
+    "elements": 117
+  },
+  "crest": {
+    "kind": "fixed",
+    "width": 94.28,
+    "height": 57.71,
+    "elements": 22
+  },
+  "jewel": {
+    "kind": "fixed",
+    "width": 169.74,
+    "height": 33.98,
+    "elements": 14
+  },
+  "lattice-cartouche": {
+    "kind": "fixed",
+    "width": 265.56,
+    "height": 62,
+    "elements": 28
+  },
+  "lattice-taper": {
+    "kind": "fixed",
+    "width": 182.41,
+    "height": 9.91,
+    "elements": 4
+  },
+  "side-leaf": {
+    "kind": "fixed",
+    "width": 64.17,
+    "height": 245.74,
+    "elements": 30
+  },
+  "corner-flame": {
+    "kind": "fixed",
+    "width": 119.29,
+    "height": 208.75,
+    "elements": 25
+  },
+  "tailpiece": {
+    "kind": "fixed",
+    "width": 267.21,
+    "height": 106.43,
+    "elements": 22
+  },
+  "tile-bead": {
+    "kind": "tile",
+    "width": 52.94,
+    "height": 9.9,
+    "elements": 6
+  },
+  "tile-lattice": {
+    "kind": "tile",
+    "width": 21.81,
+    "height": 8.6,
+    "elements": 4
+  },
+  "tile-zigzag": {
+    "kind": "tile",
+    "width": 20,
+    "height": 23.7,
+    "elements": 8
+  }
+}
