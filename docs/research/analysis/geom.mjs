@@ -1,10 +1,11 @@
 // Geometry helpers: SVG sprite parsing, Bezier sampling, curvature, fits.
 import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 export const PHI = (1 + Math.sqrt(5)) / 2;
 export const B_GOLD = Math.log(PHI) / (Math.PI / 2); // 0.30635
 
-export const ROOT = 'C:/Users/ginam/code/blog/my-blog/src/ornaments';
+export const ROOT = fileURLToPath(new URL('../../../src/ornaments', import.meta.url));
 
 export function loadSprite() {
   const svg = fs.readFileSync(`${ROOT}/hand-drawn.svg`, 'utf8');
