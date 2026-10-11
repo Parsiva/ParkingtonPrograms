@@ -2,6 +2,7 @@
 
 **Status:** design proposal, before implementation; nothing here is built yet · **Date:** 2026-10-10
 **Readers:** the owner (designer) first, future implementers second.
+**Part of a larger system.** This document specifies the frame layer of the engine described in [system.md](system.md). Where the two differ (stages, compiler, package layout and build order), system.md takes precedence. Milestone IDs here are unchanged; system.md groups them into phases.
 **Sources:** `docs/research/README.md` and `01`–`07`, four gap studies (animation, thresholds, editor architecture, curve maths), a curve catalog, five competing proposals and two judges' reviews. Both judges picked the Architect's proposal ("Elevations"). This document builds on that proposal and adds the strongest parts of the other four: the Frame Press Lab, Neatline's ranks and generalisation, Fount's assemblies and hinting, and Burin's stations and phase locks.
 
 Where something is a guess or a design choice rather than a measured fact, it is labelled *(assumption)* or *(to measure)*.
@@ -1152,6 +1153,8 @@ See section 16.
 ---
 
 ## 13. Roadmap
+
+> **Build order:** [system.md §18](system.md) groups these milestones into phases and moves motion (M8) earlier, before the curve kernel. Motion on straight tracks doesn't need the kernel. The GPU backend is a recorded future idea ([future-ideas.md](future-ideas.md)).
 
 Estimates are rough, part-time, solo with AI help. **Scope freeze:** M0–M3 are rectilinear only, with no curve kernel until the frame is running on the live site. Maps are **not built** in this roadmap, but the core is kept shareable so a future map engine can plug in (section 16).
 

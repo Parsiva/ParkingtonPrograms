@@ -1,9 +1,11 @@
-# Frame engine design
+# Engine design
 
-- **[frame-engine.md](frame-engine.md)**: the design ("Elevations"). Start here.
+- **[system.md](system.md)**: the whole system and how its ideas work together. **Start here.**
+- [frame-engine.md](frame-engine.md): the frame layer in detail ("Elevations").
+- [future-ideas.md](future-ideas.md): parked ideas, each with the trigger for picking it up (GPU engine, map engine).
 - [../research/](../research/README.md): the earlier research (71 case studies, measurements of the drawing).
 
-## Background
+## Background for the frame layer
 
 Produced on 2026-10-10 by a design workflow. Four gap studies fed five competing proposals and a curve catalog; two judges scored the proposals; one synthesis followed. Both judges picked the architect proposal.
 
